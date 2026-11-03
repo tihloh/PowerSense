@@ -1,0 +1,31 @@
+name: Build and test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  parser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile JBD decoder tests
+        run: g++ -std=c++17 -Wall -Wextra -Werror core/jbd.cpp tests/test_jbd.cpp -o /tmp/powersense-parser-tests
+      - name: Test
+        run: /tmp/powersense-parser-tests
+  esp32-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Compile firmware
+        run: pio run -d firmware
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: powersense-esp32-development
+          path: firmware/.pio/build/esp32dev/firmware.bin
