@@ -1,0 +1,13 @@
+.pio/
+firmware/.pio/
+.vscode/
+build/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+secrets.h
+sdkconfig
+sdkconfig.old
+managed_components/
